@@ -58,15 +58,8 @@ async function drawMap() {
 
   // 4. Create scales
 
-  const longScale = d3
-    .scaleLinear()
-    .domain([-180, 180])
-    .range([0, dimensions.boundedWidth]);
+  // No scales needed because projection() takes care of scaling our points
 
-  const latScale = d3
-    .scaleLinear()
-    .domain([-90, 90])
-    .range([dimensions.boundedHeight, 0]);
   // 5. Draw data
 
   const earth = bounds
@@ -94,11 +87,16 @@ async function drawMap() {
   const a = dataset[0];
   const c = countryAccessor(a);
   const filtered = country_dataset.filter(d => countryNameAccessor(d) == c);
+  let lo = countryLongAccessor(filtered[0]);
+  let la = countryLatAccessor(filtered[0]);
+  console.log(lo, la);
 
+  const p = projection([lo, la]);
+  console.log(projection([lo, la]));
   bounds
     .append('circle')
-    .attr('cx', longScale(countryLongAccessor(filtered[0])))
-    .attr('cy', latScale(countryLatAccessor(filtered[0])))
+    .attr('cx', p[0])
+    .attr('cy', p[1])
     .attr('r', 5)
     .attr('fill', '#f9423a');
 
@@ -106,7 +104,7 @@ async function drawMap() {
 
   // 7. Set up interactions
 
-  countries.on('mouseenter', onMouseEnter).on('mouseleave', onMouseLeave);
+  // countries.on('mouseenter', onMouseEnter).on('mouseleave', onMouseLeave);
 
   // const tooltip = d3.select('#tooltip');
   // function onMouseEnter(datum) {
