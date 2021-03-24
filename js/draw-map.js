@@ -2,9 +2,8 @@ async function drawMap() {
   // 1. Access data
 
   const countryShapes = await d3.json('./data/world-geojson.json');
-  const dataset = await d3.csv('./data/test.csv');
-  const country_dataset = await d3.csv('./data/world_coords.csv');
-
+  const countryData = await d3.csv('./data/world_coords.csv');
+  const _dataset = await d3.csv('./data/test.csv');
   // console.log(dataset);
   // TODO add accessors
   const activityNameAccessor = d => d['International Activity Name'];
@@ -12,8 +11,8 @@ async function drawMap() {
 
   // Accessors for country_dataset
   const countryNameAccessor = d => d.country;
-  const countryLatAccessor = d => +d.latitude;
-  const countryLongAccessor = d => +d.longitude;
+
+  let dataset = _dataset.filter(d => countryAccessor(d) != 'NA');
 
   // 2. Create chart dimensions
 
@@ -84,21 +83,55 @@ async function drawMap() {
     .attr('stroke', '#fff');
 
   // TODO test adding circles for each line in the dataset
-  const a = dataset[0];
-  const c = countryAccessor(a);
-  const filtered = country_dataset.filter(d => countryNameAccessor(d) == c);
-  let lo = countryLongAccessor(filtered[0]);
-  let la = countryLatAccessor(filtered[0]);
-  console.log(lo, la);
+  dataset.forEach((a, i) => {
+    const country_name = countryAccessor(a);
 
-  const p = projection([lo, la]);
-  console.log(projection([lo, la]));
-  bounds
-    .append('circle')
-    .attr('cx', p[0])
-    .attr('cy', p[1])
-    .attr('r', 5)
-    .attr('fill', '#f9423a');
+    let country_data = countryData.filter(
+      d => countryNameAccessor(d) == country_name
+    )[0];
+    if (country_name == 'Congo, Dem. Rep.') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) == 'Congo [DRC]'
+      )[0];
+    } else if (country_name == 'Trinidad & Tobago') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) == 'Trinidad and Tobago'
+      )[0];
+    } else if (country_name == 'Korea, Rep.') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) == 'South Korea'
+      )[0];
+    } else if (country_name == 'Russian Federation') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) === 'Russia'
+      )[0];
+    } else if (country_name == 'North Macedonia') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) === 'Macedonia [FYROM]'
+      )[0];
+    } else if (country_name == 'Venezuela, RB') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) === 'Venezuela'
+      )[0];
+    } else if (country_name == 'Taiwan, China') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) === 'Taiwan'
+      )[0];
+    } else if (country_name == 'Slovak Republic') {
+      country_data = countryData.filter(
+        d => countryNameAccessor(d) === 'Slovakia'
+      )[0];
+    }
+    const long = country_data.longitude;
+    const lat = country_data.latitude;
+    const p = projection([long, lat]);
+    bounds
+      .append('circle')
+      .attr('cx', p[0])
+      .attr('cy', p[1])
+      .attr('r', 5)
+      .attr('fill', '#f9423a');
+  });
 
   // 6. Draw peripherals
 
