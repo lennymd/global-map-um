@@ -130,7 +130,8 @@ async function drawMap() {
       .attr('cx', p[0])
       .attr('cy', p[1])
       .attr('r', 5)
-      .attr('fill', '#f9423a');
+      .attr('fill', '#f9423a')
+      .attr('opacity', 0.4);
   });
 
   // 6. Draw peripherals
