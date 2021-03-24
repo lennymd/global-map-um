@@ -3,7 +3,7 @@ async function drawMap() {
 
   const countryShapes = await d3.json('./data/world-geojson.json');
   const countryData = await d3.csv('./data/world_coords.csv');
-  const _dataset = await d3.csv('./data/test.csv');
+  const _dataset = await d3.csv('./data/activities_by_country_20210208.csv');
   // console.log(dataset);
   // TODO add accessors
   const activityNameAccessor = d => d['International Activity Name'];
