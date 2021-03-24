@@ -141,7 +141,7 @@ async function drawMap() {
       .append('circle')
       .attr('cx', p[0])
       .attr('cy', p[1])
-      .attr('r', 1.5)
+      .attr('r', 4)
       .attr('fill', '#f9423a')
       .attr('opacity', 0.4);
   });
@@ -180,7 +180,7 @@ async function drawMap() {
 drawMap();
 
 function jitter() {
-  const base = 4;
+  const base = 5;
   const sign = Math.random();
   const v = sign > 0.5 ? +1 : -1;
   return v * base * Math.random();
