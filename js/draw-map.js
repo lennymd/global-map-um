@@ -96,6 +96,8 @@ async function drawMap() {
     .attr('fill', '#d2d3d4')
     .attr('stroke', '#fff');
 
+  let b = multipleActivitiesList[0];
+  let a = countryShapes.features[0];
   dataset.forEach((a, i) => {
     const country_name = countryAccessor(a);
     let country_data_name;
@@ -130,7 +132,7 @@ async function drawMap() {
     let p = [];
     if (multipleActivitiesList.includes(country_name)) {
       console.log('yes', country_name, i);
-      p = [x + jitter(5, 1), y + jitter(5, 1)];
+      p = [x + jitter(), y + jitter()];
     } else {
       p = [x, y];
     }
@@ -177,8 +179,9 @@ async function drawMap() {
 }
 drawMap();
 
-function jitter(base, n) {
-  const sign = Math.random(1);
+function jitter() {
+  const base = 4;
+  const sign = Math.random();
   const v = sign > 0.5 ? +1 : -1;
-  return v * base * Math.random(n);
+  return v * base * Math.random();
 }
