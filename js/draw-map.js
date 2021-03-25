@@ -3,8 +3,8 @@ async function drawMap() {
 
   const countryShapes = await d3.json('./data/world-geojson.json');
   const countryData = await d3.csv('./data/world_coords.csv');
-  const _dataset = await d3.csv('./data/test.csv');
-
+  const _dataset = await d3.csv('./data/combined_20210208.csv');
+  debugger;
   // TODO add accessors
   const activityNameAccessor = d => d['International Activity Name'];
   const countryAccessor = d => d['IA Country'];
@@ -18,16 +18,11 @@ async function drawMap() {
   for (let i = 0; i < dataset.length; i++) {
     const country = countryAccessor(dataset[i]);
     if (countryList.includes(country)) {
-      if (multipleActivitiesList.includes(country)) {
-        continue;
-      } else {
-        multipleActivitiesList.push(country);
-      }
+      continue;
     } else {
       countryList.push(country);
     }
   }
-  console.log(countryList.length, multipleActivitiesList.length);
 
   // 2. Create chart dimensions
 
@@ -96,55 +91,120 @@ async function drawMap() {
     .attr('fill', '#d2d3d4')
     .attr('stroke', '#fff');
 
-  let b = multipleActivitiesList[0];
-  let a = countryShapes.features[0];
-  dataset.forEach((a, i) => {
-    const country_name = countryAccessor(a);
-    let country_data_name;
-
-    if (country_name == 'Congo, Dem. Rep.') {
-      country_data_name = 'Congo [DRC]';
-    } else if (country_name == 'Trinidad & Tobago') {
-      country_data_name = 'Trinidad and Tobago';
-    } else if (country_name == 'Korea, Rep.') {
-      country_data_name = 'South Korea';
-    } else if (country_name == 'Russian Federation') {
-      country_data_name = 'Russia';
-    } else if (country_name == 'North Macedonia') {
-      country_data_name = 'Macedonia [FYROM]';
-    } else if (country_name == 'Venezuela, RB') {
-      country_data_name = 'Venezuela';
-    } else if (country_name == 'Taiwan, China') {
-      country_data_name = 'Taiwan';
-    } else if (country_name == 'Slovak Republic') {
-      country_data_name = 'Slovakia';
+  function getCoordinates(country) {
+    let country_name;
+    if (country == 'Congo, Dem. Rep.') {
+      country_name = 'Congo [DRC]';
+    } else if (country == 'Trinidad & Tobago') {
+      country_name = 'Trinidad and Tobago';
+    } else if (country == 'Korea, Rep.') {
+      country_name = 'South Korea';
+    } else if (country == 'Russian Federation') {
+      country_name = 'Russia';
+    } else if (country == 'North Macedonia') {
+      country_name = 'Macedonia [FYROM]';
+    } else if (country == 'Venezuela, RB') {
+      country_name = 'Venezuela';
+    } else if (country == 'Taiwan, China') {
+      country_name = 'Taiwan';
+    } else if (country == 'Slovak Republic') {
+      country_name = 'Slovakia';
     } else {
-      country_data_name = country_name;
+      country_name = country;
     }
+    let _data = countryData.filter(d => countryName(d) == country_name)[0];
+    return [_data.longitude, _data.latitude];
+  }
 
-    let country_data = countryData.filter(
-      d => countryName(d) == country_data_name
-    )[0];
+  // TODO iterate this part
+  // let c = countryList[5];
+  // console.log(c);
 
-    const long = country_data.longitude;
-    const lat = country_data.latitude;
-    const [x, y] = projection([long, lat]);
-    let p = [];
-    if (multipleActivitiesList.includes(country_name)) {
-      console.log('yes', country_name, i);
-      p = [x + jitter(), y + jitter()];
-    } else {
-      p = [x, y];
+  countryList.forEach(c => {
+    console.log(c);
+    // get centroid for country. This is an array. Compute pixel format
+    const centroid_deg = getCoordinates(c);
+    const centroid_px = projection(centroid_deg);
+
+    // TODO filter data to only have that country.
+    let filtered = dataset.filter(d => countryAccessor(d) == c);
+
+    // for any number of nodes or filtered line do force layout
+    let simulation = d3
+      .forceSimulation(filtered)
+      .force('charge', d3.forceManyBody().strength(1))
+      .force('center', d3.forceCenter(centroid_px[0], centroid_px[1]))
+      .force(
+        'collisoon',
+        d3.forceCollide().radius(d => filtered.length / 2)
+      )
+      .stop();
+
+    function ticked() {
+      var u = d3.select('svg').selectAll(`country`).data(filtered);
+
+      u.enter()
+        .append('circle')
+        .attr('r', 4)
+        .merge(u)
+        .attr('cx', function (d) {
+          return d.x;
+        })
+        .attr('cy', function (d) {
+          return d.y;
+        });
+      u.exit().remove();
     }
-
-    bounds
-      .append('circle')
-      .attr('cx', p[0])
-      .attr('cy', p[1])
-      .attr('r', 4)
-      .attr('fill', '#f9423a')
-      .attr('opacity', 0.4);
   });
+
+  // TODO if length > 1: use force layout to arrange things.
+  // dataset.forEach((a, i) => {
+  //   const country_name = countryAccessor(a);
+  //   let country_data_name;
+
+  //   if (country_name == 'Congo, Dem. Rep.') {
+  //     country_data_name = 'Congo [DRC]';
+  //   } else if (country_name == 'Trinidad & Tobago') {
+  //     country_data_name = 'Trinidad and Tobago';
+  //   } else if (country_name == 'Korea, Rep.') {
+  //     country_data_name = 'South Korea';
+  //   } else if (country_name == 'Russian Federation') {
+  //     country_data_name = 'Russia';
+  //   } else if (country_name == 'North Macedonia') {
+  //     country_data_name = 'Macedonia [FYROM]';
+  //   } else if (country_name == 'Venezuela, RB') {
+  //     country_data_name = 'Venezuela';
+  //   } else if (country_name == 'Taiwan, China') {
+  //     country_data_name = 'Taiwan';
+  //   } else if (country_name == 'Slovak Republic') {
+  //     country_data_name = 'Slovakia';
+  //   } else {
+  //     country_data_name = country_name;
+  //   }
+
+  //   let country_data = countryData.filter(
+  //     d => countryName(d) == country_data_name
+  //   )[0];
+
+  //   const long = country_data.longitude;
+  //   const lat = country_data.latitude;
+  //   const [x, y] = projection([long, lat]);
+  //   let p = [];
+  //   if (multipleActivitiesList.includes(country_name)) {
+  //     console.log('yes', country_name, i);
+  //     p = [x + jitter(), y + jitter()];
+  //   } else {
+  //     p = [x, y];
+  //   }
+
+  //   bounds
+  //     .append('circle')
+  //     .attr('cx', p[0])
+  //     .attr('cy', p[1])
+  //     .attr('r', 4)
+  //     .attr('fill', '#f9423a')
+  //     .attr('opacity', 0.4);
+  // });
 
   // 6. Draw peripherals
 
@@ -178,10 +238,3 @@ async function drawMap() {
   // }
 }
 drawMap();
-
-function jitter() {
-  const base = 5;
-  const sign = Math.random();
-  const v = sign > 0.5 ? +1 : -1;
-  return v * base * Math.random();
-}
