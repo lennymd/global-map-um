@@ -27,13 +27,15 @@ body {
   fill: none;
 }
 
+.country {
+  fill: #999;
+}
 .country_bubble {
-  fill: #171717;
-  opacity: 0.3;
+  fill: goldenrod;
+  opacity: 0.25;
 }
 
-/* .country_bubble:hover {
-  opacity: 1;
+.country_bubble_active {
   fill: #f9423a;
-  transition: all 0.4s;
-} */
+  opacity: 1;
+}

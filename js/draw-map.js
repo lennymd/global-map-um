@@ -1,24 +1,5 @@
-async function drawMap2() {
-  // 1. Access data
-
-  const countryShapes = await d3.json('./data/world-geojson.json');
-
-  const countryData = await d3.csv('./data/world_coords.csv');
-  // Accessors for countryData
-
-  const _dataset = await d3.csv('./data/test.csv');
-  // Accessors for dataset
-  // TODO add accessors
-  const activityNameAccessor = d => d['International Activity Name'];
-  const countryAccessor = d => d['IA Country'];
-
-  let dataset = _dataset.filter(d => countryAccessor(d) != 'NA');
-
-  const nested_data = d3.nest().key(countryAccessor).entries(dataset);
-  const country_key_list = nested_data.map(d => d.key);
-  const event_count_list = nested_data.map(d => d.values.length);
-
-  // 2. Create chart dimensions
+function drawMap(countryShapes, countryData, nestedData) {
+  // create chart dimensions
   let dimensions = {
     width: window.innerWidth * 0.9,
     margin: {
@@ -42,7 +23,7 @@ async function drawMap2() {
   dimensions.height =
     dimensions.boundedHeight + dimensions.margin.top + dimensions.margin.bottom;
 
-  // 3. Draw canvas
+  // Draw canvas
 
   const wrapper = d3
     .select('#wrapper')
@@ -57,12 +38,13 @@ async function drawMap2() {
       `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`
     );
 
-  // 4. Create scales
+  // Create scales
 
+  const eventCount = nestedData.map(d => d.values.length);
   const rScale = d3
     .scaleLinear()
-    .domain(d3.extent(event_count_list))
-    .range([4, 80])
+    .domain(d3.extent(eventCount))
+    .range([4, 50])
     .nice();
 
   // 5. Draw data
@@ -109,25 +91,79 @@ async function drawMap2() {
     } else {
       country_name = country;
     }
-    let _data = countryData.filter(d => countryName(d) == country_name)[0];
+    let _data = countryData.filter(d => d.country == country_name)[0];
     return [_data.longitude, _data.latitude];
   }
 
-  nested_data.forEach(d => {
+  const countryList = nestedData.map(d => d.key);
+
+  nestedData.forEach(d => {
     const country = d.key;
+    const countryId = countryList.indexOf(country);
     const activities = +d.values.length;
     const [x, y] = getCoordinates(country);
     const p = projection([x, y]);
-    console.log(country, activities);
-    bounds
+    const bubble = bounds
       .append('circle')
       .attr('cx', p[0])
       .attr('cy', p[1])
+      .attr('id', `country_${countryId}`)
       .attr('r', rScale(activities))
       .attr('class', 'country_bubble');
   });
 
-  // 7. Set up interactions
+  // Add interactivity
+  // TODO On hover, highlight the dot and show country name
+  // TODO On click smooth scroll to the country on the list below
 
+  d3.selectAll('.country_bubble')
+    .on('mouseenter', onMouseEnter)
+    .on('mouseleave', onMouseLeave)
+    .on('click', navigateToRow);
+
+  function onMouseEnter() {
+    d3.select(this).classed('country_bubble_active', true);
+    const countryIndex = this.id.split('_')[1];
+    const _data = nestedData[countryIndex];
+    const name = _data.key;
+    const value = _data.values.length;
+    const cx = this.getAttribute('cx');
+    const cy = this.getAttribute('cy');
+    const r = this.getAttribute('r');
+    const delta = r * 0.3;
+
+    // TODO put this text and number in a tooltip
+    const textLabel = bounds
+      .append('text')
+      .attr('class', 'label_country_name')
+      .text(name)
+      .attr('x', cx)
+      .attr('y', cy)
+      .attr('dy', -delta)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '0.7em');
+
+    const valueLabel = bounds
+      .append('text')
+      .attr('class', 'label_country_value')
+      .text(value)
+      .attr('x', cx)
+      .attr('y', cy)
+      .attr('dy', delta)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '0.7em');
+
+    let a = d3.select('.label_country_name')._groups[0][0];
+    let b = d3.select('.label_country_value')._groups[0][0];
+  }
+  function onMouseLeave() {
+    d3.select(this).classed('country_bubble_active', false);
+    d3.selectAll('.label_country_name').remove();
+    d3.selectAll('.label_country_value').remove();
+  }
+
+  function navigateToRow() {
+    const countryIndex = this.id.split('_')[1];
+    console.log(countryIndex);
+  }
 }
-drawMap2();

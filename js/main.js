@@ -19,12 +19,10 @@ async function main() {
   // clean and prep working data
   let dataset = _dataset.filter(d => countryAccessor(d) != 'NA');
 
-  const nested_data = d3.nest().key(countryAccessor).entries(dataset);
-  const country_key_list = nested_data.map(d => d.key);
-  const event_count_list = nested_data.map(d => d.values.length);
+  const nestedData = d3.nest().key(countryAccessor).entries(dataset);
 
-  drawMap(countryShapes, nested_data);
-  drawTable();
+  drawMap(countryShapes, countryData, nestedData);
+  drawTable(nestedData);
 }
 
 main();
