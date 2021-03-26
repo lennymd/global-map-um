@@ -121,6 +121,7 @@ function drawMap(countryShapes, countryData, nestedData) {
     .on('mouseleave', onMouseLeave)
     .on('click', navigateToRow);
 
+  const tooltip = d3.select('#tooltip');
   function onMouseEnter() {
     d3.select(this).classed('country_bubble_active', true);
     const countryIndex = this.id.split('_')[1];
@@ -130,36 +131,32 @@ function drawMap(countryShapes, countryData, nestedData) {
     const cx = this.getAttribute('cx');
     const cy = this.getAttribute('cy');
     const r = this.getAttribute('r');
-    const delta = r * 0.3;
 
-    // TODO put this text and number in a tooltip
-    const textLabel = bounds
-      .append('text')
-      .attr('class', 'label_country_name')
-      .text(name)
-      .attr('x', cx)
-      .attr('y', cy)
-      .attr('dy', -delta)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '0.7em');
+    const value_tense = value == 1 ? 'activity' : 'activities';
 
-    const valueLabel = bounds
-      .append('text')
-      .attr('class', 'label_country_value')
-      .text(value)
-      .attr('x', cx)
-      .attr('y', cy)
-      .attr('dy', delta)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '0.7em');
+    tooltip.style('opacity', 1);
 
-    let a = d3.select('.label_country_name')._groups[0][0];
-    let b = d3.select('.label_country_value')._groups[0][0];
+    tooltip.select('#country').text(name);
+    tooltip.select('#value').text(`${value} ${value_tense}`);
+
+    const tooltipRect = document
+      .getElementById('tooltip')
+      .getBoundingClientRect();
+    console.log(tooltipRect);
+
+    console.log(tooltipRect.width);
+    const tooltipDeltaX = tooltipRect.width * 0.4;
+    const tooltipDeltaY = tooltipRect.height;
+
+    tooltip
+      .style('left', `${cx - tooltipDeltaX}px`)
+      .style('top', `${cy - tooltipRect.height}px`);
   }
   function onMouseLeave() {
     d3.select(this).classed('country_bubble_active', false);
     d3.selectAll('.label_country_name').remove();
     d3.selectAll('.label_country_value').remove();
+    tooltip.style('opacity', 0);
   }
 
   function navigateToRow() {
