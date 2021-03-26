@@ -2,11 +2,6 @@
 html {
   font-family: 'Inter', sans-serif;
 }
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: 'Inter var', sans-serif;
-  }
-}
 
 body {
   display: flex;
@@ -14,7 +9,7 @@ body {
   align-items: center;
   padding: 2em;
   letter-spacing: -0.011em;
-  font-family: 'Inter var', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
 }
 
@@ -32,41 +27,13 @@ body {
   fill: none;
 }
 
-.tooltip {
-  opacity: 0;
-  position: absolute;
-  top: -12px;
-  left: 0;
-  padding: 0.6em 1em;
-  background: #fff;
-  text-align: center;
-  border: 1px solid #ddd;
-  z-index: 10;
-  transition: all 0.2s ease-out;
-  pointer-events: none;
+.country_bubble {
+  fill: #171717;
+  opacity: 0.3;
 }
 
-.tooltip:before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  background: white;
-  border: 1px solid #ddd;
-  border-top-color: transparent;
-  border-left-color: transparent;
-  transform: translate(-50%, 50%) rotate(45deg);
-  transform-origin: center center;
-  z-index: 10;
-}
-
-.tooltip-country {
-  margin-bottom: 0.2em;
-  font-weight: 600;
-}
-
-.tooltip-value {
-  font-size: 0.8em;
-}
+/* .country_bubble:hover {
+  opacity: 1;
+  fill: #f9423a;
+  transition: all 0.4s;
+} */
