@@ -4,9 +4,6 @@ html {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 2em;
   letter-spacing: -0.011em;
   font-family: 'Inter', sans-serif;
@@ -31,16 +28,16 @@ body {
   fill: #999;
 }
 .country_bubble {
-  fill: goldenrod;
-  opacity: 0.3;
+  fill: #f47321;
+  opacity: 0.4;
   stroke-width: 1px;
   stroke: white;
 }
 
 .country_bubble_active {
-  fill: #f9423a;
+  /* fill: #f9423a; */
   opacity: 1;
-  stroke-width: 0;
+  /* stroke-width: 0; */
 }
 
 .tooltip {
@@ -87,9 +84,9 @@ body {
 .country_row {
   max-width: 900px;
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 1fr 3fr;
   margin-bottom: 30px;
-  column-gap: 20px;;
+  column-gap: 20px;
 }
 .country_name_box h3 {
   margin: 0;
@@ -101,7 +98,7 @@ body {
 }
 
 .activity {
-  background-color: #f9423a;
+  background-color: #f47321;
   display: inline-block;
   width: 20px;
   height: 20px;

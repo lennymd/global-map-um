@@ -136,7 +136,27 @@ function drawMap(countryShapes, countryData, nestedData) {
 
     tooltip.style('opacity', 1);
 
-    tooltip.select('#country').text(name);
+    tooltip.select('#country').text(() => {
+      if (name == 'Congo, Dem. Rep.') {
+        return 'Democratic Republic of the Congo';
+      } else if (name == 'Trinidad & Tobago') {
+        return 'Trinidad and Tobago';
+      } else if (name == 'Korea, Rep.') {
+        return 'South Korea';
+      } else if (name == 'Russian Federation') {
+        return 'Russia';
+      } else if (name == 'North Macedonia') {
+        return 'North Macedonia (Former Yugoslavic Republic of Macedonia)';
+      } else if (name == 'Venezuela, RB') {
+        return 'Venezuela';
+      } else if (name == 'Taiwan, China') {
+        return 'Taiwan';
+      } else if (name == 'Slovak Republic') {
+        return 'Slovakia';
+      } else {
+        return name;
+      }
+    });
     tooltip.select('#value').text(`${value} ${value_tense}`);
 
     const tooltipRect = document
@@ -161,6 +181,8 @@ function drawMap(countryShapes, countryData, nestedData) {
 
   function navigateToRow() {
     const countryIndex = this.id.split('_')[1];
-    console.log(countryIndex);
+    document
+      .getElementById(`country_row_${countryIndex}`)
+      .scrollIntoView({behavior: 'smooth', block: 'start'});
   }
 }

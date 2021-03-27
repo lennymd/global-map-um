@@ -10,9 +10,8 @@ async function main() {
   const countryName = d => d.country;
 
   // load working data
-  const _dataset = await d3.csv('./data/test.csv');
+  const _dataset = await d3.csv('./data/activities_by_country_20210208.csv');
   // accessors for working data
-  // TODO add accessors
   const activityNameAccessor = d => d['International Activity Name'];
   const countryAccessor = d => d['IA Country'];
 
