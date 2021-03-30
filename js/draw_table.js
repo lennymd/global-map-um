@@ -16,13 +16,12 @@ function drawTable(nestedData) {
     .domain(order)
     .range([
       '#00429d',
-      '#4771b2',
-      '#73a2c6',
-      '#a5d5d8',
-      '#ffbcaf',
-      '#f4777f',
-      '#cf3759',
+      '#5681b9',
+      '#93c4d2',
+      '#ffa59e',
+      '#dd4c65',
       '#93003a',
+      '#666',
     ]);
   function getType(a) {
     let d = a['Activity Sub-Type'];
@@ -39,6 +38,18 @@ function drawTable(nestedData) {
 
     return _a;
   }
+
+  // populate legend
+  const legendBox = d3.select('.activity_legend');
+  order.forEach(opt => {
+    const box = legendBox.append('div').attr('class', 'legend_group');
+    box
+      .append('div')
+      .attr('class', 'legend_dot')
+      .style('background-color', colorScale(opt));
+
+    box.append('p').attr('class', 'legend_opt').text(opt);
+  });
 
   nestedData.forEach((d, i) => {
     const row = container.append('div').attr('class', 'country_row');
@@ -127,14 +138,18 @@ function drawTable(nestedData) {
       .append('p')
       .attr('class', 'info_txt')
       .html(() => {
+        let start = d['Activity Start Date'];
+        let end = d['Activity End Date'];
         if (d['Activity Status'] == 'Published') {
-          return `${d['Activity Start Date']} &ndash; ${d['Activity End Date']}`;
+          return `${start} &ndash; ${end}`;
         } else {
           return `${d['Activity Start Date']} &ndash; Present`;
         }
       });
     grid1_right.append('h3').attr('class', 'info_hed').text('Type of Activity');
     grid1_right.append('p').attr('class', 'info_txt').html(getType(d));
+    grid1_right.append('h3').attr('class', 'info_hed').text('Country');
+    grid1_right.append('p').attr('class', 'info_txt').html(d['IA Country']);
   }
   // Modal close event
   window.onclick = function (event) {

@@ -4,10 +4,7 @@
     <title>My Map</title>
   </head>
   <body>
-    <link
-      rel="stylesheet"
-      href="https://raw.githubusercontent.com/lennymd/um_global_map/main/css/global_map.css"
-    />
+    <link rel="stylesheet" href="./css/global_map.css" />
     <div id="wrapper" class="wrapper">
       <div id="tooltip" class="tooltip">
         <div class="tooltip-country" id="country"></div>
@@ -20,6 +17,9 @@
         Click on one of the dots below to get more information about the
         different international activities conduced by faculty.
       </p>
+      <div class="activity_legend">
+        
+      </div>
       <!-- TODO add legend explaining colors -->
       <div class="activity_list"></div>
     </section>
@@ -37,9 +37,9 @@
       </div>
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://raw.githubusercontent.com/lennymd/um_global_map/main/js/draw_map.js"></script>
-    <script src="https://raw.githubusercontent.com/lennymd/um_global_map/main/js/draw_table.js"></script>
-    <script src="https://raw.githubusercontent.com/lennymd/um_global_map/main/js/global_map_main.js"></script>
+    <script src="./js/draw_map.js"></script>
+    <script src="./js/draw_table.js"></script>
+    <script src="./js/global_map_main.js"></script>
     <!-- TODO add tooltips to circles -->
     <!-- TODO add info cards for each activity -->
   </body>
