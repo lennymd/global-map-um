@@ -88,6 +88,7 @@ body {
   grid-template-columns: 1fr 3fr;
   margin-bottom: 30px;
   column-gap: 20px;
+  padding-top: 10px;
 }
 .country_name_box h3 {
   margin: 0;
@@ -192,7 +193,7 @@ body {
 }
 
 .info_hed {
-  margin: 0
+  margin: 0;
 }
 .info_txt {
   margin-top: 0;
