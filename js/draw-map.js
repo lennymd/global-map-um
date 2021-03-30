@@ -162,9 +162,7 @@ function drawMap(countryShapes, countryData, nestedData) {
     const tooltipRect = document
       .getElementById('tooltip')
       .getBoundingClientRect();
-    console.log(tooltipRect);
 
-    console.log(tooltipRect.width);
     const tooltipDeltaX = tooltipRect.width * 0.4;
     const tooltipDeltaY = tooltipRect.height;
 

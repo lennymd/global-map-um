@@ -17,9 +17,22 @@
         Click on one of the dots below to get more information about the
         different international activities conduced by faculty.@@@@
       </p>
+      <!-- TODO add legend explaining colors -->
       <div class="activity_list"></div>
     </section>
 
+    <div id="modal_section" class="modal">
+      <div class="modal_box">
+        <div class="modal_header">
+          <div class="modal_header_text">ACTIVITY</div>
+
+          <div class="modal_close">
+            <div class="modal_close_txt">&times;</div>
+          </div>
+        </div>
+        <div id="modal_content"></div>
+      </div>
+    </div>
     <script src="./js/d3.v5.js"></script>
     <script src="./js/draw-map.js"></script>
     <script src="./js/draw-table.js"></script>
