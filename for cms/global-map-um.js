@@ -1,4 +1,3 @@
-console.log('WIP');
 async function main() {
   // load country shapes & coordinate data
   const countryShapes = await d3.json('./data/world-geojson.json');
