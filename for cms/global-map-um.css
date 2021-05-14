@@ -1,12 +1,6 @@
-/* @import url('https://rsms.me/inter/inter.css');
-html {
-  font-family: 'Inter', sans-serif;
-} */
-
-body {
+.lmd-graphic {
   padding: 2em;
   letter-spacing: -0.011em;
-  /* font-family: 'Inter', sans-serif; */
   font-size: 16px;
   line-height: 1.4;
 }

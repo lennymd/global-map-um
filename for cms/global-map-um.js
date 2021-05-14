@@ -1,10 +1,16 @@
 async function main() {
   // load country shapes & coordinate data
-  const countryShapes = await d3.json('./data/world-geojson.json');
-  const countryData = await d3.csv('./data/world_coords.csv');
+  const countryShapes = await d3.json(
+    'https://global.com.miami.edu/_assets/js/data/world-geojson.json'
+  );
+  const countryData = await d3.csv(
+    'https://global.com.miami.edu/_assets/js/data/world_coords.csv'
+  );
 
   // load working data
-  const _dataset = await d3.csv('./data/activities_by_country_20210208.csv');
+  const _dataset = await d3.csv(
+    'https://global.com.miami.edu/_assets/js/data/activities_by_country_20210208.csv'
+  );
 
   // accessors for working data
   const activityNameAccessor = d => d['International Activity Name'];
@@ -21,7 +27,7 @@ async function main() {
   function drawMap(countryShapes, countryData, nestedData) {
     // create chart dimensions
     let dimensions = {
-      width: window.innerWidth * 0.8,
+      width: 600,
       margin: {
         top: 10,
         right: 10,
